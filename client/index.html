@@ -1,0 +1,38 @@
+<head>
+  <title>cards-against-humanity</title>
+</head>
+
+<template name="index">
+<div class="gamelist-container">
+
+	{{>Template.dynamic template=mainArea }}
+</div>
+</template>
+
+<template name="gameList" >
+  <table class="table">
+    <tr>
+      <td>{{> loginButtons}}</td>
+    </tr>
+    <tr>
+      <th> Owner </th>
+      <th> Players </th>
+      <th><button class="btn-default btn new-game">New Game!</button></th>
+      <th></th>
+      <th></th>
+    </tr>
+  {{#each games}}
+    <tr> 
+      <td> {{ ownerName }} </td>
+      <td> {{ playerCount }} / 10</td>
+      <td> <a href="{{ pathForGame }}" class="btn-defult btn join-game">Join Game!</a> </td>
+      <td> <button class="btn-defult btn leave-game">Leave Game!</button> </td>
+      <td> <button class="btn-defult btn delete-game">delete Game!</button> </td>
+    </tr>
+  {{/each}}
+  </table>
+</template>
+
+<template name="gameListing">
+  
+</template>

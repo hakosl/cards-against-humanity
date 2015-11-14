@@ -1,0 +1,17 @@
+<template name="answeredCards">
+	<div class="container-card container-card-answer">
+		{{#each answeredCards}}
+			<div class="card card-answer choose-winner  {{clickableCard}}">
+				<p class="card-text card-text-answer">
+					{{text}}
+				</p>
+			</div>
+		{{else}}
+			<div class="card card-answer">
+				<p class="card-text card-text-answer">
+			       Click a card below to play it!
+				</p>
+			</div>
+		{{/each}}
+	</div>
+</template>

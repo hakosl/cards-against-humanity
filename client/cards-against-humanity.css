@@ -1,0 +1,197 @@
+body{
+	padding: 0px;
+}
+
+.gamelist-container {
+  background: white;
+}
+
+.scoreboard{
+  display: flex;
+  flex-direction: column;
+  border: 4px solid black;
+  flex-basis: 240px;
+  background: black;
+}
+
+.layout-container {
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  min-height: 95vh;
+  margin: 10px;
+  border: 10px solid black;
+  border-radius: 20px;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  color: black;
+}
+
+.container-card-player {
+	border-radius: 20px;
+	flex: 1;
+}
+
+.container-scoreboard-player {
+	background: black;
+	border: 4px solid white;
+	border-radius: 1em;
+	color: white;
+	padding: 0.5em;
+	margin: 0.5em 2em 0.5em 2em;
+}
+
+.container-scoreboard-player > div > div > a {
+	text-decoration: none !important;
+	color: white;
+}
+
+.container-scoreboard-player > div > div> a:hover{
+	color: #D5D5D5;
+}
+
+.container-card {
+  margin: 0;
+  padding: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+  border: 4px solid black;
+  background: white;
+}
+
+.card {
+  min-height: 13em;
+  width: 10em;
+  padding: 1em;
+  border-radius: 1em;
+  margin: 0.75em;
+  border: 0.3em solid;
+}
+
+.clickable-card {
+  transition-duration: 1s;
+  transition-property: transform;
+}
+
+.clickable-card:hover {
+  transform: scale(1.2);
+}
+
+.card-question {
+  background-color: black;
+  color: white;
+  border-color: white;
+}
+
+.card-answer {
+  background-color: white;
+  border-color: black;
+  height: 13em;
+}
+
+.card .card-text {
+  padding: 0.5em;
+  margin: 0;
+  font-family: Helvetica;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+.container-card-answer{
+  display: flex;
+  flex-grow: 1;
+  align-content: flex-start;
+  justify-content: flex-start;
+  border-radius: 20px;
+}
+
+.layout-container > .body {
+	flex-grow: 1;
+}
+
+.body > div {
+	justify-content: stretch;
+}
+
+.container-card-question {
+  flex-direction: column;
+  background: black;
+}
+
+.please-log-in {
+  margin: 10px 230px 10px 170px;
+  color: black;
+  flex: 1;
+
+}
+
+.card .login-link-text {
+  text-decoration: none !important;
+  color: black;
+}
+
+.user .login-link-text {
+  text-decoration: none !important;
+  color: white;
+}
+
+
+
+@media (max-width: 1060px) {
+  body {
+  	background-color: black;
+  }
+
+  .please-log-in {
+  	margin: 10px 40px 10px 40px;
+  }
+
+  .container-card-answer {
+  	min-height: 17.1em;
+  	flex-basis: initial;
+  	flex-grow: initial;
+  }
+
+  .container-card-player {
+  	min-height: 17.1em;
+  	flex-basis: initial;
+  }
+
+  .body {
+    flex-direction: column;
+  }
+  
+  .container-card-question{
+    flex-direction: row;
+  }
+  
+  .scoreboard{
+    width: 100%;
+    order: -1;
+    flex: 1;
+  }
+
+  .card {
+  	width: 20em;
+  	height: 25em;
+  }
+
+  p {
+  	font-size: 2em;
+  }
+
+  .card-text {
+  	font-size: 2em !important;
+  }
+}
+
+@media (max-width: 720px){
+  .container-card-question:{
+    flex-direction: column;
+  }
+}

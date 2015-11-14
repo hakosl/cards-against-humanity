@@ -1,0 +1,15 @@
+<template name="playerCards">
+	<div class="container-card-player container-card">
+		{{#each cards}}
+			<div class="card card-answer play-card {{notMaster}}">
+				<p class="card-text">
+					{{text}}
+				</p>
+			</div>
+		{{else}}
+			<div class="please-log-in card">
+				<p class="card-text please-log-in-text text-center">{{> loginButtons}}</p>
+			</div>
+		{{/each}}
+	</div>
+</template>

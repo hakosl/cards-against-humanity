@@ -1,0 +1,31 @@
+<template name="questionCard">
+	<div class="container-card-question container-card">
+		{{#with questionCard}}
+			<div class="card-question card">
+				<p class="card-text card-text-question">
+					{{text}}
+				</p>
+			</div>
+		{{else}}
+			{{#if master}}
+				{{> chooseQuestionCard }}
+			{{else}}
+				<div class="card-question card">
+					<p class="card-text card-text-question">
+						The card Tzar is choosing a new card...
+					</p>
+				</div>
+			{{/if}}
+		{{/with}}
+	</div>
+</template>
+
+<template name="chooseQuestionCard">
+	{{#each cards}}
+		<div class="card-question card choose-question-card clickable-card">
+			<p class="card-text card-text-question">
+				{{text}}
+			</p>
+		</div>
+	{{/each}}
+</template>

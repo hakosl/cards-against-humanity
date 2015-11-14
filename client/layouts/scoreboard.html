@@ -1,0 +1,18 @@
+<template name="scoreboard">
+	<div class="scoreboard">
+		{{#each players}}
+			<div class="container-scoreboard-player">
+				<p class="user">
+				{{#if master}}<i class="fa fa-diamond"></i>{{/if}}
+				{{#if curPlayer}}
+					<i class="fa fa-user"></i>
+					{{> loginButtons}}
+				{{else}}
+					{{name}} 
+				{{/if}}
+				<span class="pull-right">{{score}} Points</span>
+				</p>
+			</div>
+		{{/each}}
+	</div>
+</template>
