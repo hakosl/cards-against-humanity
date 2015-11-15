@@ -6,7 +6,7 @@
 //Creating a game object to insert into the database
 var createPlayer = function(userId) {
   if (!userId) {
-    userId = Meteor.userId();
+    userId = this.userId;
   }
 
   return {
@@ -55,7 +55,7 @@ var createBoard = function() {
 //Checks if userId is in gameId's players[x].userId
 var playerAlreadyInGame = function(gameId, userId) {
   if (!userId) {
-    userId = Meteor.userId();
+    userId = this.userId;
   }
 
   return _.find(Games.findOne(gameId).players,
@@ -82,7 +82,7 @@ var playerAllreadyPlayedCard = function(gameId, cardId) {
   return _.find(Games.findOne({
     _id: gameId
   }).board.answerCards, function(card) {
-    return (card.userId === Meteor.userId());
+    return (card.userId === this.userId);
   });
 };
 
@@ -98,7 +98,7 @@ Meteor.methods({
 
   "newGame": function() {
     console.log("gameCount: " + Games.find().count());
-    console.log(!Meteor.userId());
+    console.log(!this.userId);
     if (!this.userId) {
       console.log("error is being thrown");
       throw new Meteor.Error("UserNotLoggedIn", "You are not logged in");
@@ -110,10 +110,10 @@ Meteor.methods({
         players: [
           createPlayer(null, "master")
         ],
-        owner: Meteor.userId(),
+        owner: this.userId,
         ownerName: Meteor.user().username,
         board: createBoard(),
-        master: Meteor.userId(),
+        master: this.userId,
         createdAt: new Date()
       });
 
@@ -121,10 +121,10 @@ Meteor.methods({
         players: [
           createPlayer(null, "master")
         ],
-        owner: Meteor.userId(),
+        owner: this.userId,
         ownerName: Meteor.user().username,
         board: createBoard(),
-        master: Meteor.userId(),
+        master: this.userId,
         createdAt: new Date()
       });
     } catch (e) {
@@ -135,7 +135,7 @@ Meteor.methods({
   },
 
   "joinGame": function(gameId) {
-    if (!playerAlreadyInGame(gameId) && Meteor.user()) {
+    if (!playerAlreadyInGame(gameId) && this.user()) {
 
       Games.update({
         "_id": gameId
@@ -153,7 +153,7 @@ Meteor.methods({
 
   "leaveGame": function(gameId, userId) {
     if (!userId) {
-      userId = Meteor.userId();
+      userId = this.userId;
     }
 
     if (playerAlreadyInGame(gameId, userId)) {
@@ -175,14 +175,14 @@ Meteor.methods({
   "destroyGame": function(gameId) {
     if (Games.findOne({
       _id: gameId
-    }).owner === Meteor.userId()) {
+    }).owner === this.userId) {
       return Games.remove({
         _id: gameId
       });
     } else {
       throw new Meteor.Error(403, "You are not the owner of this game: " + Games.findOne({
         _id: gameId
-      }).owner + " " + Meteor.userId());
+      }).owner + " " + this.userId);
     }
   },
 
@@ -191,7 +191,7 @@ Meteor.methods({
   /////////////////////////
 
   "playCard": function(gameId, cardId) {
-    if (Meteor.userId() === Games.findOne({
+    if (this.userId === Games.findOne({
       _id: gameId
     }).master) {
 
@@ -199,11 +199,11 @@ Meteor.methods({
     } else if (playerAllreadyPlayedCard(gameId, cardId)) {
 
       throw new Meteor.Error(403, "playerAllreadyPlayedCard");
-    } else if (popCardFromPlayer(gameId, Meteor.userId(), cardId)) {
+    } else if (popCardFromPlayer(gameId, this.userId, cardId)) {
 
       Games.update({ //Give player a new card
         _id: gameId,
-        "players.userId": Meteor.userId()
+        "players.userId": this.userId
       }, {
         $push: {
           "players.$.cards": generateCard("A", [])
@@ -216,7 +216,7 @@ Meteor.methods({
         $push: {
           "board.answerCards": {
             cardId: cardId,
-            userId: Meteor.userId()
+            userId: this.userId
           }
         }
       });
@@ -230,7 +230,7 @@ Meteor.methods({
     currentGame = Games.findOne({
       _id: gameId
     });
-    if (Meteor.userId() !== currentGame.master) {
+    if (this.userId !== currentGame.master) {
       console.log("no dice");
       throw new Meteor.Error(403, "You are not allowed to judge right now");
     } else {
@@ -263,7 +263,7 @@ Meteor.methods({
     var cardChoice = Cards.findOne({
       _id: choiceId
     });
-    if (Meteor.userId() !== curGame.master) {
+    if (this.userId !== curGame.master) {
       throw new Meteor.Error('noPermission',
         "You are not currently allowed to do that, because you are not the master");
     } else if (curGame.board.questionCard) {
