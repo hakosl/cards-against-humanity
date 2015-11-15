@@ -5,10 +5,6 @@
 //Player is different from user because players play and users use
 //Creating a game object to insert into the database
 var createPlayer = function(userId) {
-  if (!userId) {
-    userId = this.userId;
-  }
-
   return {
     userId: userId,
     name: Meteor.user().username,
@@ -78,11 +74,11 @@ var popCardFromPlayer = function(gameId, playerId, cardId) {
 };
 
 //Check if player is allowed to play a new card
-var playerAllreadyPlayedCard = function(gameId, cardId) {
+var playerAllreadyPlayedCard = function(gameId, userId, cardId) {
   return _.find(Games.findOne({
     _id: gameId
   }).board.answerCards, function(card) {
-    return (card.userId === this.userId);
+    return (card.userId === userId);
   });
 };
 
@@ -97,51 +93,34 @@ Meteor.methods({
   ///////////////////////////////
 
   "newGame": function() {
-    console.log("gameCount: " + Games.find().count());
-    console.log(!this.userId);
     if (!this.userId) {
       console.log("error is being thrown");
       throw new Meteor.Error("UserNotLoggedIn", "You are not logged in");
     }
+    console.log("userId: " + this.userId);
+    gameId = Games.insert({
+      players: [
+        createPlayer(this.userId)
+      ],
+      owner: this.userId,
+      ownerName: Meteor.user().username,
+      board: createBoard(),
+      master: this.userId,
+      createdAt: new Date()
+    });
 
-    console.log("kden");
-    try {
-      console.log("game: " + {
-        players: [
-          createPlayer(null, "master")
-        ],
-        owner: this.userId,
-        ownerName: Meteor.user().username,
-        board: createBoard(),
-        master: this.userId,
-        createdAt: new Date()
-      });
-
-      gameId = Games.insert({
-        players: [
-          createPlayer(null, "master")
-        ],
-        owner: this.userId,
-        ownerName: Meteor.user().username,
-        board: createBoard(),
-        master: this.userId,
-        createdAt: new Date()
-      });
-    } catch (e) {
-      console.log(e.name + ": " + e.message);
-    }
     console.log("gameID: " + gameId);
     return gameId;
   },
 
   "joinGame": function(gameId) {
-    if (!playerAlreadyInGame(gameId) && this.user()) {
+    if (!playerAlreadyInGame(gameId, undefined) && Meteor.user()) {
 
       Games.update({
         "_id": gameId
       }, {
         $addToSet: {
-          players: createPlayer()
+          players: createPlayer(this.userId)
         }
       });
 
@@ -196,7 +175,7 @@ Meteor.methods({
     }).master) {
 
       throw new Meteor.Error(403, "playerIsMaster");
-    } else if (playerAllreadyPlayedCard(gameId, cardId)) {
+    } else if (playerAllreadyPlayedCard(gameId, this.userId, cardId)) {
 
       throw new Meteor.Error(403, "playerAllreadyPlayedCard");
     } else if (popCardFromPlayer(gameId, this.userId, cardId)) {
@@ -230,6 +209,7 @@ Meteor.methods({
     currentGame = Games.findOne({
       _id: gameId
     });
+    
     if (this.userId !== currentGame.master) {
       console.log("no dice");
       throw new Meteor.Error(403, "You are not allowed to judge right now");
